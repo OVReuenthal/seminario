@@ -1,4 +1,11 @@
-<?php include("db.php"); ?>
+<?php 
+session_start();
+include("../db.php");
+$conn = conexion();
+
+$rol = isset($_SESSION['rol']) ? $_SESSION['rol'] : null;
+
+?>
 
 <?php include('includes/header.php'); ?>
 
@@ -17,51 +24,81 @@
       <?php session_unset(); } ?>
 
       <!-- ADD TASK FORM -->
-      <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <form action="save_task.php" method="POST">
-          <div class="mb-4">
-            <input type="text" name="title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Task Title" autofocus>
-          </div>
-          <div class="mb-4">
-            <textarea name="description" rows="2" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Task Description"></textarea>
-          </div>
-          <input type="submit" name="save_task" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" value="Save Task">
-        </form>
-      </div>
+      <?php if ($rol != 0) : ?>
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          <form class="form" method="post" action="../controllers/registroLibro.php" enctype="multipart/form-data">
+              <div class="mb-4">
+                  <input type="text" name="titulo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Titulo" autofocus>
+              </div>
+              <div class="mb-4">
+                  <input type="date" name="fecha" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="fecha" autofocus>
+              </div>
+              <div class="mb-4">
+                  <input type="text" name="autor" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="autor" autofocus>
+              </div>
+              <div class="mb-4">
+                  <input type="text" name="editorial" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="editorial" autofocus>
+              </div>
+              <div class="mb-4">
+                  <input type="text" name="genero" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="genero" autofocus>
+              </div>
+              <div class="mb-4">
+                  <input type="file" name="documento" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="archivo" autofocus>
+              </div>
+              <input type="submit" name="save_task" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" value="Save Task">
+          </form>
+        </div>
+      <?php else : ?>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong class="font-bold">Acceso Denegado!</strong>
+            <span class="block sm:inline">No tienes permisos para registrar un libro.</span>
+        </div>
+      <?php endif; ?>
+
     </div>
     <div class="w-full md:w-2/3 p-2">
-      <table class="min-w-full bg-white">
-        <thead>
-          <tr>
-            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">Title</th>
-            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">Description</th>
-            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">Created At</th>
-            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">Action</th>
-          </tr>
-        </thead>
-        <tbody>
+    <table class="min-w-full bg-white">
+    <thead>
+        <tr>
+            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">codigo</th>
+            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">titulo</th>
+            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">fecha</th>
+            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">autor</th>
+            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">editorial</th>
+            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">genero</th>
+            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">accion</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $query = "SELECT * FROM libros";
+        $result_tasks = mysqli_query($conn, $query);    
 
-          <?php
-          $query = "SELECT * FROM task";
-          $result_tasks = mysqli_query($conn, $query);    
-
-          while($row = mysqli_fetch_assoc($result_tasks)) { ?>
-          <tr>
-            <td class="border px-4 py-2"><?php echo $row['title']; ?></td>
-            <td class="border px-4 py-2"><?php echo $row['description']; ?></td>
-            <td class="border px-4 py-2"><?php echo $row['created_at']; ?></td>
+        while($row = mysqli_fetch_assoc($result_tasks)) { ?>
+        <tr>
+            <th scope="row">
+                <a href="../libros/<?= $row['codigo'] ?>.pdf" target="_blank"><?= $row['codigo'] ?></a>
+            </th>
+            <td class="border px-4 py-2"><?php echo $row['titulo']; ?></td>
+            <td class="border px-4 py-2"><?php echo $row['fecha']; ?></td>
+            <td class="border px-4 py-2"><?php echo $row['autor']; ?></td>
+            <td class="border px-4 py-2"><?php echo $row['editorial']; ?></td>
+            <td class="border px-4 py-2"><?php echo $row['genero']; ?></td>
             <td class="border px-4 py-2">
-              <a href="edit.php?id=<?php echo $row['id']?>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
-                <i class="fas fa-marker"></i>
-              </a>
-              <a href="delete_task.php?id=<?php echo $row['id']?>" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
-                <i class="far fa-trash-alt"></i>
-              </a>
+                <?php if ($rol != 0) : ?>
+                    <a href="edit.php?codigo=<?php echo $row['codigo']?>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
+                        <i class="fas fa-marker"></i>
+                    </a>
+                    <a href="../controllers/eliminarLibro.php?codigo=<?php echo $row['codigo']?>" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+                        <i class="far fa-trash-alt"></i>
+                    </a>
+                <?php endif; ?>
             </td>
-          </tr>
-          <?php } ?>
-        </tbody>
-      </table>
+        </tr>
+        <?php } ?>
+    </tbody>
+</table>
+
     </div>
   </div>
 </main>

@@ -149,7 +149,7 @@
             <?php
                 include "modelo/conexion.php";
 
-                 $sql=$conexion-> query(" select * from tesis");
+                 $sql=$conexion-> query(" select * from libros");
                  while($datos = $sql ->fetch_object()){ 
             ?>
                 <tr>

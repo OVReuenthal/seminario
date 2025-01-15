@@ -13,12 +13,12 @@
         <h1 class="text-center text-3xl font-bold mb-6">LOGIN</h1>
         <div class="login-content max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
             <form class="form" method="post" action="">
+                <?php
+                    include '../controllers/cLogin.php';
+                ?>
+
                 <h3 class="text-center text-2xl font-semibold mb-4">Ingresar datos de usuario</h3>
 
-                <?php
-                   include("C:/xampp/htdocs/Crud/seminario/modelo/conexion.php");
-                   include("C:/xampp/htdocs/Crud/seminario/controllers/cLogin.php");
-                ?>
 
                 <div class="mb-4">
                     <label for="usuario" class="block mb-2 text-sm font-medium text-gray-700">Nombre de usuario</label>
