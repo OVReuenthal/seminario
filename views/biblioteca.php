@@ -4,7 +4,6 @@ include("../db.php");
 $conn = conexion();
 
 $rol = isset($_SESSION['rol']) ? $_SESSION['rol'] : null;
-
 ?>
 
 <?php include('includes/header.php'); ?>
@@ -13,7 +12,6 @@ $rol = isset($_SESSION['rol']) ? $_SESSION['rol'] : null;
   <div class="flex flex-wrap">
     <div class="w-full md:w-1/3 p-2">
       <!-- MESSAGES -->
-
       <?php if (isset($_SESSION['message'])) { ?>
       <div class="bg-<?= $_SESSION['message_type'] == 'success' ? 'green' : 'red' ?>-100 border border-<?= $_SESSION['message_type'] == 'success' ? 'green' : 'red' ?>-400 text-<?= $_SESSION['message_type'] == 'success' ? 'green' : 'red' ?>-700 px-4 py-3 rounded relative" role="alert">
         <?= $_SESSION['message']?>
@@ -54,30 +52,30 @@ $rol = isset($_SESSION['rol']) ? $_SESSION['rol'] : null;
             <span class="block sm:inline">No tienes permisos para registrar un libro.</span>
         </div>
       <?php endif; ?>
-
     </div>
+
     <div class="w-full md:w-2/3 p-2">
-    <table class="min-w-full bg-white">
-    <thead>
+    <table class="min-w-full bg-white shadow rounded-lg">
+      <thead>
         <tr>
-            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">codigo</th>
-            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">titulo</th>
-            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">fecha</th>
-            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">autor</th>
-            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">editorial</th>
-            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">genero</th>
-            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">accion</th>
+            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">Codigo</th>
+            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">Titulo</th>
+            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">Fecha</th>
+            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">Autor</th>
+            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">Editorial</th>
+            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">Genero</th>
+            <th class="py-2 px-4 bg-gray-200 text-left text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">Accion</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         <?php
         $query = "SELECT * FROM libros";
         $result_tasks = mysqli_query($conn, $query);    
 
         while($row = mysqli_fetch_assoc($result_tasks)) { ?>
-        <tr>
-            <th scope="row">
-                <a href="../libros/<?= $row['codigo'] ?>.pdf" target="_blank"><?= $row['codigo'] ?></a>
+        <tr class="border-t">
+            <th scope="row" class="px-4 py-2">
+                <a href="../libros/<?= $row['codigo'] ?>.pdf" target="_blank" class="text-blue-500 hover:underline"><?= $row['codigo'] ?></a>
             </th>
             <td class="border px-4 py-2"><?php echo $row['titulo']; ?></td>
             <td class="border px-4 py-2"><?php echo $row['fecha']; ?></td>
@@ -96,11 +94,11 @@ $rol = isset($_SESSION['rol']) ? $_SESSION['rol'] : null;
             </td>
         </tr>
         <?php } ?>
-    </tbody>
-</table>
-
+      </tbody>
+    </table>
     </div>
   </div>
 </main>
 
 <?php include('includes/footer.php'); ?>
+
