@@ -1,6 +1,6 @@
 <?php
+include ('../views/includes/session.php');
 if (!empty($_GET["codigo"])) {
-
     include("../db.php");
     $db = conexion();
     

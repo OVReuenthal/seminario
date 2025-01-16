@@ -2,7 +2,7 @@
 include("../db.php");
 $db = conexion();
 
-$titulo = $fecha = $autor = $editorial = $genero = ""; // Definir variables vacías por defecto
+$titulo = $fecha = $autor = $editorial = $genero = ""; 
 
 if (isset($_GET['codigo'])) {
     $codigo = $_GET['codigo'];
@@ -54,71 +54,62 @@ if (isset($_GET['codigo'])) {
 
 <?php
 if (isset($_POST['update'])) {
-  $codigo = $_GET['codigo'];
-  $titulo = $_POST['titulo'];
-  $fecha = $_POST['fecha'];
-  $autor = $_POST['autor'];
-  $editorial = $_POST['editorial'];
-  $genero = $_POST['genero'];
+  if (!empty($_POST['titulo']) && !empty($_POST['fecha']) && !empty($_POST['autor']) && !empty($_POST['editorial']) && !empty($_POST['genero'])) {
+      $codigo = $_GET['codigo'];
+      $titulo = $_POST['titulo'];
+      $fecha = $_POST['fecha'];
+      $autor = $_POST['autor'];
+      $editorial = $_POST['editorial'];
+      $genero = $_POST['genero'];
 
-  $sql = $db->query("UPDATE libros SET titulo = '$titulo', fecha = '$fecha', autor = '$autor', editorial = '$editorial', genero = '$genero' WHERE codigo = $codigo");
+      $sql = $db->query("UPDATE libros SET titulo = '$titulo', fecha = '$fecha', autor = '$autor', editorial = '$editorial', genero = '$genero' WHERE codigo = $codigo");
 
-  if ($sql) {
-    if (!empty($_FILES['documento']['tmp_name'])) {
-      $file = "../libros/{$codigo}.pdf";
-      if (file_exists($file)) {
-        unlink($file);
+      if ($sql) {
+          if (!empty($_FILES['documento']['tmp_name'])) {
+              $file = "../libros/{$codigo}.pdf";
+              if (file_exists($file)) {
+                  unlink($file);
+              }
+              $nombre_documento = strval($codigo) . ".pdf";
+              move_uploaded_file($_FILES["documento"]["tmp_name"], "../libros/" . $nombre_documento);
+          }
+
+          header("Location: ../views/biblioteca.php");
+          exit();
+      } else {
+          echo '<div class="alert alert-danger">Error al modificar los datos. Inténtalo de nuevo.</div>';
       }
-      $nombre_documento = strval($codigo) . ".pdf";
-      move_uploaded_file($_FILES["documento"]["tmp_name"], "../libros/" . $nombre_documento);
-    }
-
-    header("Location: ../views/biblioteca.php");
-    exit();
   } else {
-    echo '<div class="alert-danger">Error al modificar los datos</div>';
+      echo '<div class="alert alert-warning">Alguno de los campos está vacío.</div>';
   }
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Library CRUD</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100">
-  <div class="container mx-auto p-4">
-    <div class="flex justify-start">
-      <div class="w-full md:w-1/3">
-        <div class="bg-white p-6 rounded-lg shadow-lg">
-          <form action="edit.php?codigo=<?php echo $_GET['codigo']; ?>" method="POST" enctype="multipart/form-data">
-            <div class="mb-4">
-              <input name="titulo" type="text" class="form-control w-full p-2 border border-gray-300 rounded" value="<?php echo $titulo; ?>" placeholder="Update Title">
-            </div>
-            <div class="mb-4">
-              <input name="fecha" type="date" class="form-control w-full p-2 border border-gray-300 rounded" value="<?php echo $fecha; ?>" placeholder="Update Date">
-            </div>
-            <div class="mb-4">
-              <input name="autor" type="text" class="form-control w-full p-2 border border-gray-300 rounded" value="<?php echo $autor; ?>" placeholder="Update Author">
-            </div>
-            <div class="mb-4">
-              <input name="editorial" type="text" class="form-control w-full p-2 border border-gray-300 rounded" value="<?php echo $editorial; ?>" placeholder="Update Editorial">
-            </div>
-            <div class="mb-4">
-              <input name="genero" type="text" class="form-control w-full p-2 border border-gray-300 rounded" value="<?php echo $genero; ?>" placeholder="Update Genre">
-            </div>
-            <div class="mb-4">
-              <input type="file" name="documento" class="form-control w-full p-2 border border-gray-300 rounded">
-            </div>
-            <button class="bg-green-500 text-white p-2 rounded" name="update">
-              Update
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</body>
-</html>
+
+<style>
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-family: Arial, sans-serif;
+    width: 90%;
+    max-width: 600px;
+    margin: 20px auto;
+    text-align: center;
+}
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+.alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+</style>
